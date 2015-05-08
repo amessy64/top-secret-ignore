@@ -3,12 +3,39 @@
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
+  <h1>Trying out table templates</h1>
 
-  {{> hello}}
+  <table>
+  	<thead>
+  	<tr>
+  		<td>Employees</td>
+  		<td>Monday</td>
+  		<td>Tuesday</td>
+  		<td>Wednesday</td>
+  		<td>Thursday</td>
+  		<td>Friday</td>
+  		<td>Saturday</td>
+  		<td>Sunday</td>
+  	</tr>
+  	</thead>
+  	<tbody>
+  		{{#each shifts}}
+  	  		{{> shift}}
+  	  	{{/each}}
+    </tbody>
+  </table>
+
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="shift">
+	<tr>
+		<td>{{name}}</td>
+		{{> hourrow}}
+	</tr>
+</template>
+
+<template name="hourrow">
+	{{#each hours}}
+		<td>{{hour}}</td>
+	{{/each}}
 </template>
