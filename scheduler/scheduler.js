@@ -1,23 +1,52 @@
+Employees = new Mongo.Collection("employees");
+
+Shifts = new Mongo.Collection("shifts");
+//shift: {day : 2, name : "Alex", hours : "2 to 5"} 1 is Monday
+
 if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault('counter', 0);
+    Template.body.events({
+	    "submit .new-employee" : function (event) {
+		    event.preventDefault();
+        var text = event.target.text.value;
+		    Employees.insert({
+			   name : text,
+		    });
+		
+		    event.target.text.value = "";
+	    },
 
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
+      "submit .new-shift" : function (event) {
+        var d = event.target.day.value;
+        var n = event.target.employee.value;
+        var h = event.target.hours.value;
+
+        event.preventDefault();
+        Shifts.insert({
+          day : parseInt(d),
+          name : n,
+          hours : h
+        });
+
+        event.target.day.value = "";
+        event.target.employee.value = "";
+        event.target.hours.value = "";
+      }
+    });
+
+    
+  Template.body.helpers({
+    employees : function () 
+    {
+      return Employees.find().fetch();
     }
   });
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
-}
+  Template.employee.helpers({
+    day : [{num : 0}, {num : 1}, {num : 2}, {num : 3}, {num : 4}, { num : 5}, {num : 6}],
 
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
+    shift : function ( d ) 
+    { 
+      return Shifts.findOne({name : Template.parentData(1).name, day : d });
+    }
   });
 }
